@@ -1,0 +1,43 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: champions-league-simulation-app
+        restart: unless-stopped
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "9000:9000"
+        depends_on:
+            - mysql
+
+    nginx:
+        image: nginx:stable-alpine
+        container_name: champions-league-simulation-nginx
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www/html
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+
+    mysql:
+        image: mysql:8.0
+        container_name: champions-league-simulation-mysql
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: champions_league_simulation
+            MYSQL_ROOT_PASSWORD: 1q2w3e4r
+            MYSQL_PASSWORD: 1q2w3e4r
+        volumes:
+            - dbdata:/var/lib/mysql
+
+volumes:
+    dbdata:
+        driver: local
