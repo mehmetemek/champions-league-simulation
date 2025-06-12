@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Team;
-use App\Models\Fixture;
-use App\Models\Game;
-use App\Models\ScoreBoard;
+use App\Services\DataCleanupService;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
 class TeamSeeder extends Seeder
@@ -19,14 +16,8 @@ class TeamSeeder extends Seeder
     {
         $faker = Faker::create();
         
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
-        Game::truncate();
-        ScoreBoard::truncate();
-        Fixture::truncate();
-        Team::truncate();
-        
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $cleanupService = app(DataCleanupService::class);
+        $cleanupService->cleanupTournamentData();
         
         $teamsData = [
             ['name' => 'Chelsea'],

@@ -4,36 +4,35 @@ namespace App\Services;
 
 use App\Models\Team;
 use App\Models\Fixture;
-use Illuminate\Support\Facades\DB;
+use App\Services\DataCleanupService;
 
 class FixtureGeneratorService
 {
-    /**
-     * Belirtilen takımlar için tüm lig fikstürlerini oluşturur.
-     * Her takım diğer her takımla hem evinde hem deplasmanda oynar.
-     *
-     * @return bool
-     */
+    protected $cleanupService;
+
+    public function __construct(DataCleanupService $cleanupService)
+    {
+        $this->cleanupService = $cleanupService;
+    }
+
+
     public function generate(): bool
     {
+        
         $teams = Team::all();
         $teamsCount = $teams->count();
 
-        // En az 2 takım veya çift sayıda takım olmalı
         if ($teamsCount < 2 || $teamsCount % 2 != 0) {
             return false;
         }
 
-        $teamSeeder = new \Database\Seeders\TeamSeeder();
-        $teamSeeder->run();
+        $this->cleanupService->cleanupTournamentData(false);
 
-        // TeamSeeder'ı çağırmak yerine doğrudan takım ID'lerini kullanın
         $teamIds = $teams->pluck('id')->toArray();
 
         $fixtures = [];
-        $totalWeeks = ($teamsCount - 1) * 2; // Her takımla ikişer kez oynanır
+        $totalWeeks = ($teamsCount - 1) * 2;
 
-        // Round-robin fikstür algoritması (her takım diğerini bir kez evde, bir kez deplasmanda oynar)
         for ($week = 1; $week <= $totalWeeks; $week++) {
             $currentRoundFixtures = [];
             $teamsInRound = $teamIds;
@@ -51,11 +50,10 @@ class FixtureGeneratorService
 
             $fixtures = array_merge($fixtures, $currentRoundFixtures);
 
-            // Takımların sıralamasını bir sonraki hafta için döndür
-            $firstTeam = array_shift($teamIds); // İlk takımı çıkar
-            $lastTeam = array_pop($teamIds);    // Son takımı çıkar
-            array_unshift($teamIds, $lastTeam); // Son takımı başa ekle
-            array_splice($teamIds, 1, 0, [$firstTeam]); // Çıkarılan ilk takımı ikinci sıraya ekle (sabit tutulan ilk takım hariç)
+            $firstTeam = array_shift($teamIds);
+            $lastTeam = array_pop($teamIds);
+            array_unshift($teamIds, $lastTeam);
+            array_splice($teamIds, 1, 0, [$firstTeam]);
         }
 
         Fixture::insert($fixtures);

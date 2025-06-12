@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 class Game extends Model
 {
     use HasFactory, SoftDeletes;
@@ -17,6 +16,10 @@ class Game extends Model
         'played_at',
         'home_shoot_count',
         'away_shoot_count',
+    ];
+    
+    protected $casts = [
+        'played_at' => 'datetime',
     ];
 
     public function fixture()

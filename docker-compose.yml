@@ -37,6 +37,17 @@ services:
             MYSQL_PASSWORD: 1q2w3e4r
         volumes:
             - dbdata:/var/lib/mysql
+    node:
+        image: node:20-alpine
+        container_name: football-simulation-node
+        working_dir: /app
+        volumes:
+            - .:/app
+        ports:
+            - "5173:5173"
+        command: npm run dev
+        depends_on:
+            - app
 
 volumes:
     dbdata:

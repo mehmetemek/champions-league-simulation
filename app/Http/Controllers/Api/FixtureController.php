@@ -39,7 +39,7 @@ class FixtureController extends Controller
      */
     public function index()
     {
-        $fixtures = Fixture::with(['homeTeam', 'awayTeam', 'match'])->orderBy('week')->get();
+        $fixtures = Fixture::with(['homeTeam', 'awayTeam', 'game'])->orderBy('week')->get();
         return FixtureResource::collection($fixtures);
     }
 }

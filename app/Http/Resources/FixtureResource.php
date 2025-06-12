@@ -22,10 +22,10 @@ class FixtureResource extends JsonResource
             'away_team_id' => $this->away_team_id,
             'away_team_name' => $this->awayTeam->name,
             'is_played' => $this->is_played,
-            'match_result' => $this->whenLoaded('match', function () {
+            'game_result' => $this->whenLoaded('game', function () {
                 return [
-                    'home_score' => $this->match->home_score,
-                    'away_score' => $this->match->away_score,
+                    'home_score' => $this->game->home_score,
+                    'away_score' => $this->game->away_score,
                 ];
             })
         ];

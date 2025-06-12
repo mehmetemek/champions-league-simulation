@@ -21,6 +21,30 @@ class Team extends Model
     {
         return $this->hasMany(Fixture::class, 'away_team_id');
     }
+    
+    public function homeGames()
+    {
+        return $this->hasManyThrough(
+            Game::class,
+            Fixture::class,
+            'home_team_id',
+            'fixture_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function awayGames()
+    {
+        return $this->hasManyThrough(
+            Game::class,
+            Fixture::class,
+            'away_team_id',
+            'fixture_id',
+            'id',
+            'id'
+        );
+    }
 
     public function scoreBoard()
     {
