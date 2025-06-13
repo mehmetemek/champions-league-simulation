@@ -27,7 +27,7 @@ Follow these steps to run the project in your local development environment.
 ### 1. Clone the Project
 
 ```bash
-git clone <https://github.com/mehmetemek/champions-league-simulation.git>
+git clone https://github.com/mehmetemek/champions-league-simulation.git
 cd champions-league-simulation
 ```
 
