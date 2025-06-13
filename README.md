@@ -1,79 +1,81 @@
-# Şampiyonlar Ligi Simülasyonu
+# Champions League Simulation
 
-Bu proje, 4 futbol takımları arasında gerçekleşen bir ligin simülasyonu yapan web uygulamasıdır. Takımların gücüne, ev sahibi avantajına ve diğer faktörlere dayanarak maç sonuçlarını simüle eder ve şampiyonluk tahminleri sunar.
+This is a web application that simulates a league tournament between 4 football teams. It simulates match results based on team strength, home advantage, and other factors, and provides championship predictions.
 
-## Özellikler
+## Features
 
-- Otomatik 4 adet takım oluşturma
-- Otomatik fikstür oluşturma
-- Gerçekçi maç simülasyonları
-- Hafta hafta turnuva simülasyonu
-- Şampiyonluk tahmin sistemi
-- Puan durumu tablosu
+- Automatically creates 4 teams
+- Automatic fixture generation
+- Realistic match simulations
+- Week-by-week tournament simulation
+- Championship prediction system
+- League standings table
 
 
-## Teknolojik Altyapı
+## Technology Stack
 
 - **Backend:** Laravel 11
 - **Frontend:** Vue.js 3 + Inertia.js
-- **Veritabanı:** MySQL / SQLite (unit testler için)
+- **Database:** MySQL / SQLite (for unit tests)
 - **Containerization:** Docker
 - **CSS Framework:** Bootstrap 5
 
-## Proje Kurulum Adımları
+## Installation Steps
 
-Bu adımları izleyerek projeyi yerel geliştirme ortamınızda çalıştırabilirsiniz.
+Follow these steps to run the project in your local development environment.
 
-### 1. Projeyi Klonlama
+### 1. Clone the Project
 
 ```bash
+git clone <https://github.com/mehmetemek/champions-league-simulation.git>
 cd champions-league-simulation
 ```
 
-### 2. Docker ile Kurulum
+### 2. Docker Setup
 
 ```bash
-# Container'ları oluşturup başlatma
+# Build and start containers
 docker-compose up -d --build
 
-# Composer bağımlılıklarını yükleme
+# Install Composer dependencies
 docker-compose exec app composer install
 
-# .env dosyasını oluşturma
+# Create .env file
 docker-compose exec app cp .env.example .env
 docker-compose exec app php artisan key:generate
 
-# Veritabanını hazırlama
+# Setup the database
 docker-compose exec app php artisan migrate
 docker-compose exec app php artisan db:seed
 ```
 
-### 3. Frontend Kurulumu
+### 3. Frontend Setup
 
+** not required (docker-compose runs this automatically, but can be run if needed)
 ```bash
-# Node.js bağımlılıklarını yükleme
+# Install Node.js dependencies
 docker-compose exec node npm install
 
-# Frontend'i geliştirme modunda başlatma
+# Start frontend in development mode
 docker-compose exec node npm run dev
 ```
 
-### 4. Uygulamaya Erişim
+### 4. Accessing the Application
 
-Kurulum tamamlandıktan sonra, tarayıcınızdan aşağıdaki URL'i açarak uygulamaya erişebilirsiniz:
+After installation is complete, you can access the application by opening the following URL in your browser:
 ```
 http://localhost
 ```
 
-## Proje Yapısı
+## Project Structure
 
-- **app/Models:** Veritabanı modelleri (Team, Fixture, Game, ScoreBoard)
-- **app/Services:** İş mantığı servisleri (FixtureGeneratorService, MatchSimulatorService vb.)
-- **app/Http/Controllers:** Kontrol sınıfları
-- **resources/js/Pages:** Vue.js bileşenleri
-- **tests/:** Birim ve entegrasyon testleri
+- **app/Models:** Database models (Team, Fixture, Game, ScoreBoard)
+- **app/Services:** Business logic services (FixtureGeneratorService, MatchSimulatorService, etc.)
+- **app/Http/Controllers:** Controller classes
+- **resources/js/Pages:** Vue.js components
+- **tests/:** Unit tests
 
-## Testlerin Çalıştırılması
+## Running Tests
 
 ```bash
 docker-compose exec app php artisan test
