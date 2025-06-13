@@ -3,13 +3,10 @@
     <div class="row justify-content-center">
       <div class="col-md-10">
         <h1 class="text-center display-4 mb-5">Generated Fixtures</h1>
-
-        <div v-if="loading" class="alert alert-info mt-3">Fikstürler yükleniyor...</div>
         <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
         <div v-if="Object.keys(fixturesByWeek).length === 0 && !loading" class="alert alert-warning">
-          Henüz fikstür oluşturulmadı. Lütfen <Link href="/">Takım Seçimi</Link> sayfasına giderek oluşturun.
+          No fixtures have been generated yet. Please go to <Link href="/" class="font-weight-bold text-primary text-decoration-underline">Team Selection</Link> page to create them.
         </div>
-
         <div class="row">
           <div class="col-md-3 mb-4" v-for="(fixtures, week) in fixturesByWeek" :key="week">
             <div class="card fixture-card">
@@ -24,7 +21,6 @@
             </div>
           </div>
         </div>
-
         <button @click="startSimulation" :disabled="loading || Object.keys(fixturesByWeek).length === 0" class="btn btn-success mt-4">
           Start Simulation
         </button>
@@ -48,8 +44,7 @@ const fetchFixtures = async () => {
     const response = await window.axios.get('/api/fixtures');
     fixtures.value = response.data.data;
   } catch (err) {
-    console.error('Fikstürler çekilirken hata oluştu:', err);
-    error.value = 'Fikstürler yüklenemedi.';
+    error.value = 'Failed to load fixtures.';
   } finally {
     loading.value = false;
   }

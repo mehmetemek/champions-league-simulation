@@ -40,10 +40,10 @@
           <div class="col-md-6">
             <h3 class="mb-3">Week {{ currentWeek }} Match Results</h3>
             <div v-if="currentWeekMatches.length === 0 && currentWeek === 0" class="alert alert-info">
-              Maçlar henüz oynanmadı.
+              No matches have been played yet.
             </div>
             <div v-else-if="currentWeekMatches.length === 0 && currentWeek > 0" class="alert alert-info">
-              Bu hafta için maç sonucu bulunamadı.
+              No match results found for this week.
             </div>
             <div v-else>
               <div class="card match-result-card mb-2" v-for="match in currentWeekMatches" :key="match.id">
@@ -125,7 +125,7 @@ const fetchCurrentSimulationState = async (week = 0) => {
     championshipPredictions.value = response.data.championship_predictions;
     fixtures.value = response.data.all_fixtures;
   } catch (err) {
-      error.value = err?.response?.data?.message || 'Error loading simulation state.';
+      error.value = err?.response?.data?.message || 'Failed to load simulation state.';
     } finally {
     loading.value = false;
   }

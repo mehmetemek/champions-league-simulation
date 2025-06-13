@@ -16,11 +16,7 @@ use App\Services\ScoreBoardUpdaterService;
 use App\Services\ChampionshipPredictionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Validation\Rule;
 use Faker\Factory as Faker;
-use Illuminate\Support\Testing\Fakes\Fake;
-
 class SimulationController extends Controller
 {
     protected $matchSimulatorService;
@@ -42,16 +38,16 @@ class SimulationController extends Controller
     {
         $maxWeek = Fixture::max('week') ?? 0;
         if ($week <= 0 || $week > $maxWeek) {
-            return response()->json(['message' => 'Geçersiz hafta numarası.'], 400);
+            return response()->json(['message' => 'Invalid week number.'], 400);
         }
 
         $fixturesToPlay = Fixture::where('week', $week)
                                   ->where('is_played', false)
-                                  ->with(['homeTeam', 'awayTeam']) // Eager loading ile takım bilgilerini de çek
+                                  ->with(['homeTeam', 'awayTeam'])
                                   ->get();
 
         if ($fixturesToPlay->isEmpty()) {
-            return response()->json(['message' => 'Hafta ' . $week . ' için oynanmamış maç bulunamadı.'], 200);
+            return response()->json(['message' => 'No unplayed matches found for week ' . $week . '.'], 200);
         }
 
         $playedGames = [];
@@ -69,7 +65,7 @@ class SimulationController extends Controller
             'played_matches' => GameResource::collection($playedGames),
             'league_table' => ScoreBoardResource::collection($scoreBoards),
             'championship_predictions' => $predictions,
-            'message' => 'Hafta ' . $week . ' başarıyla simüle edildi.'
+            'message' => 'Week ' . $week . ' successfully simulated.'
         ]);
     }
 
@@ -79,7 +75,7 @@ class SimulationController extends Controller
         $currentPlayedWeek = Fixture::where('is_played', true)->max('week') ?? 0;
 
         if ($currentPlayedWeek >= $maxWeek) {
-            return response()->json(['message' => 'Tüm maçlar zaten oynanmış.'], 200);
+            return response()->json(['message' => 'All matches have already been played.'], 200);
         }
 
         $allPlayedGames = [];
@@ -107,7 +103,7 @@ class SimulationController extends Controller
             'played_matches' => GameResource::collection($allPlayedGames),
             'league_table' => ScoreBoardResource::collection($scoreBoards),
             'championship_predictions' => $predictions,
-            'message' => 'Tüm oynanmamış haftalar başarıyla simüle edildi.'
+            'message' => 'All remaining weeks were successfully simulated.'
         ]);
     }
 
@@ -148,7 +144,7 @@ class SimulationController extends Controller
             'played_matches' => [],
             'league_table' => ScoreBoardResource::collection($scoreBoards),
             'championship_predictions' => $predictions,
-            'message' => 'Simülasyon verileri sıfırlandı.'
+            'message' => 'Simulation data has been reset.'
         ]);
     }
 

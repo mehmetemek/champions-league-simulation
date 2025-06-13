@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Team; // Team modelini import edin
-use App\Services\FixtureGeneratorService; // Servisi import edin
-use App\Http\Resources\FixtureResource; // FixtureResource'u import edin
-use App\Models\Fixture; // Fixture modelini import edin
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema; // Schema facade'ı import edin (truncate için)
+use App\Services\FixtureGeneratorService;
+use App\Http\Resources\FixtureResource;
+use App\Models\Fixture;
 
 
 class FixtureController extends Controller
@@ -20,9 +17,6 @@ class FixtureController extends Controller
         $this->fixtureGeneratorService = $fixtureGeneratorService;
     }
 
-    /**
-     * Takımlar için fikstürleri oluşturur.
-     */
     public function generate()
     {
         $generated = $this->fixtureGeneratorService->generate();
@@ -31,12 +25,9 @@ class FixtureController extends Controller
             return FixtureResource::collection(Fixture::with(['homeTeam', 'awayTeam'])->orderBy('week')->get());
         }
 
-        return response()->json(['message' => 'Fikstürler oluşturulamadı, lütfen en az 2 takım olduğundan emin olun.'], 400);
+        return response()->json(['message' => 'Fixtures could not be created. Please make sure there are at least 2 teams.'], 400);
     }
 
-    /**
-     * Tüm fikstürleri haftalarına göre listele.
-     */
     public function index()
     {
         $fixtures = Fixture::with(['homeTeam', 'awayTeam', 'game'])->orderBy('week')->get();
