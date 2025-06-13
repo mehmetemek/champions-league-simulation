@@ -21,13 +21,7 @@ class FixtureResource extends JsonResource
             'home_team_name' => $this->homeTeam->name,
             'away_team_id' => $this->away_team_id,
             'away_team_name' => $this->awayTeam->name,
-            'is_played' => $this->is_played,
-            'game_result' => $this->whenLoaded('game', function () {
-                return [
-                    'home_score' => $this->game->home_score,
-                    'away_score' => $this->game->away_score,
-                ];
-            })
+            'is_played' => $this->is_played
         ];
     }
 }

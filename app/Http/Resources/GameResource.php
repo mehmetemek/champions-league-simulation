@@ -23,9 +23,6 @@ class GameResource extends JsonResource
             'away_team_name' => $this->fixture->awayTeam->name,
             'home_score' => $this->home_score,
             'away_score' => $this->away_score,
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'home_shoot_count' => $this->home_shoot_count,
-            'away_shoot_count' => $this->away_shoot_count,
         ];
     }
 }

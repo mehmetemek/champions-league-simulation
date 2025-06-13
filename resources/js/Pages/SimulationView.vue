@@ -5,7 +5,7 @@
         <h1 class="text-center display-4 mb-5">Simulation</h1>
         <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
         <div v-if="!isFixtureGenerated && !loading" class="alert alert-warning">
-          Please <Link href="/">generate fixtures</Link> first to start the simulation.
+          Please <Link href="/" class="font-weight-bold text-decoration-underline text-primary">generate fixtures</Link> first to start the simulation.
         </div>
         <div class="row mt-4">
           <div class="col-md-6">

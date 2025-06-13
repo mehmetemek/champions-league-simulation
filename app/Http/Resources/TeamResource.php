@@ -16,8 +16,7 @@ class TeamResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'power' => $this->power,
+            'name' => $this->name
         ];
     }
 }

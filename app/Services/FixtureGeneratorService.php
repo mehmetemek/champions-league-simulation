@@ -19,7 +19,6 @@ class FixtureGeneratorService
 
     public function generate(): bool
     {
-        
         $teams = Team::all();
         $teamsCount = $teams->count();
 
