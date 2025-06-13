@@ -3,12 +3,10 @@
     <div class="row justify-content-center">
       <div class="col-md-10">
         <h1 class="text-center display-4 mb-5">Simulation</h1>
-        <div v-if="loading" class="alert alert-info mt-3">Simülasyon yükleniyor/işleniyor...</div>
         <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
         <div v-if="!isFixtureGenerated && !loading" class="alert alert-warning">
-          Lütfen simülasyonu başlatmak için önce <Link href="/">fikstürleri oluşturun.</Link>
+          Please <Link href="/">generate fixtures</Link> first to start the simulation.
         </div>
-
         <div class="row mt-4">
           <div class="col-md-6">
             <h3 class="mb-3">League Table</h3>
@@ -39,7 +37,6 @@
               </table>
             </div>
           </div>
-
           <div class="col-md-6">
             <h3 class="mb-3">Week {{ currentWeek }} Match Results</h3>
             <div v-if="currentWeekMatches.length === 0 && currentWeek === 0" class="alert alert-info">
@@ -59,7 +56,6 @@
                 </div>
               </div>
             </div>
-
             <h3 class="mb-3 mt-4">Championship Predictions</h3>
             <div class="prediction-table-container">
               <table class="table table-striped table-bordered table-custom">
@@ -98,7 +94,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 const currentWeek = ref(0);
 const playedMatches = ref([]);
@@ -129,9 +125,8 @@ const fetchCurrentSimulationState = async (week = 0) => {
     championshipPredictions.value = response.data.championship_predictions;
     fixtures.value = response.data.all_fixtures;
   } catch (err) {
-    console.error('Simülasyon durumu çekilirken hata oluştu:', err);
-    error.value = 'Simülasyon durumu yüklenemedi.';
-  } finally {
+      error.value = err?.response?.data?.message || 'Error loading simulation state.';
+    } finally {
     loading.value = false;
   }
 };
@@ -148,8 +143,7 @@ const playNextWeek = async () => {
     championshipPredictions.value = response.data.championship_predictions;
     await fetchCurrentSimulationState(currentWeek.value);
   } catch (err) {
-    console.error('Sonraki hafta oynatılırken hata oluştu:', err.response ? err.response.data : err);
-    error.value = err.response ? err.response.data.message : 'Hafta oynatılamadı.';
+    error.value = err?.response?.data?.message || 'Error simulating week.';
   } finally {
     loading.value = false;
   }
@@ -166,8 +160,7 @@ const playAllWeeks = async () => {
     championshipPredictions.value = response.data.championship_predictions;
     await fetchCurrentSimulationState(currentWeek.value);
   } catch (err) {
-    console.error('Tüm haftalar oynatılırken hata oluştu:', err.response ? err.response.data : err);
-    error.value = err.response ? err.response.data.message : 'Tüm haftalar oynatılamadı.';
+      error.value = err?.response?.data?.message || 'Something went wrong while playing all weeks.';
   } finally {
     loading.value = false;
   }
@@ -177,7 +170,7 @@ const resetData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await window.axios.post('/api/simulation/reset-data');
+    await window.axios.post('/api/simulation/reset-data');
     currentWeek.value = 0;
     playedMatches.value = [];
     leagueTable.value = [];
@@ -185,7 +178,7 @@ const resetData = async () => {
     fixtures.value = [];
     await fetchCurrentSimulationState();
   } catch (err) {
-    error.value = err.response ? err.response.data.message : 'Veri sıfırlanamadı.';
+    error.value = err?.response?.data?.message || 'Error resetting data.';
   } finally {
     loading.value = false;
   }
