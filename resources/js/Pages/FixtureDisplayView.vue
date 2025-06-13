@@ -1,4 +1,5 @@
 <template>
+  <Head title="Fixtures" />
   <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-10">
@@ -31,7 +32,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { router, Link, Head } from '@inertiajs/vue3';
 
 const fixtures = ref([]);
 const loading = ref(false);

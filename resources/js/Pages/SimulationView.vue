@@ -1,4 +1,5 @@
 <template>
+  <Head title="Simulation" />
   <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-10">
@@ -94,7 +95,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, Head } from '@inertiajs/vue3';
 
 const currentWeek = ref(0);
 const playedMatches = ref([]);

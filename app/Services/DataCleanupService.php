@@ -12,7 +12,7 @@ class DataCleanupService
 {
     public function cleanupTournamentData(bool $includeTeam = true): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         
         Game::truncate();
         ScoreBoard::truncate();
@@ -22,6 +22,6 @@ class DataCleanupService
             Team::truncate();
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }

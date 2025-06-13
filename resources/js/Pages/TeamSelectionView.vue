@@ -1,4 +1,5 @@
 <template>
+  <Head title="Team Selection" />
   <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-8">
@@ -26,7 +27,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router, Head } from '@inertiajs/vue3';
 
 const teams = ref([]);
 const loading = ref(false);
