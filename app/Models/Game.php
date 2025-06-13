@@ -13,13 +13,8 @@ class Game extends Model
         'fixture_id',
         'home_score',
         'away_score',
-        'played_at',
         'home_shoot_count',
         'away_shoot_count',
-    ];
-    
-    protected $casts = [
-        'played_at' => 'datetime',
     ];
 
     public function fixture()

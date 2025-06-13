@@ -163,7 +163,7 @@ class SimulationController extends Controller
                                 $query->where('is_played', true);
                             })
                             ->with(['fixture', 'fixture.homeTeam', 'fixture.awayTeam'])
-                            ->orderBy('played_at')
+                            ->orderByDesc('updated_at')
                             ->get();
 
 

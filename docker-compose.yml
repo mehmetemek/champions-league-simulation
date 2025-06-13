@@ -10,7 +10,7 @@ services:
             - .:/var/www/html
         ports:
             - "9000:9000"
-        command: sh -c "php artisan migrate && php artisan db:seed"
+        command: php-fpm
         depends_on:
             - mysql
 

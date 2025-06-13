@@ -32,7 +32,6 @@ class MatchSimulatorService
             'fixture_id' => $fixture->id,
             'home_score' => $homeScore,
             'away_score' => $awayScore,
-            'played_at' => Carbon::now(),
             'home_shoot_count' => $homeShootCount,
             'away_shoot_count' => $awayShootCount,
         ]);
@@ -59,15 +58,15 @@ class MatchSimulatorService
         $lastHomeGame = Game::whereHas('fixture', function ($query) use ($homeTeamId) {
                                 $query->where('home_team_id', $homeTeamId)->orWhere('away_team_id', $homeTeamId);
                             })
-                            ->where('played_at', '<', Carbon::now())
-                            ->orderByDesc('played_at')
+                            ->where('updated_at', '<', Carbon::now())
+                            ->orderByDesc('updated_at')
                             ->first();
 
         $lastAwayGame = Game::whereHas('fixture', function ($query) use ($awayTeamId) {
                                 $query->where('home_team_id', $awayTeamId)->orWhere('away_team_id', $awayTeamId);
                             })
-                            ->where('played_at', '<', Carbon::now())
-                            ->orderByDesc('played_at')
+                            ->where('updated_at', '<', Carbon::now())
+                            ->orderByDesc('updated_at')
                             ->first();
 
         if ($lastHomeGame) {

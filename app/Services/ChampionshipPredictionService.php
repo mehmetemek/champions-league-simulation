@@ -80,8 +80,7 @@ class ChampionshipPredictionService
         foreach ($scoreBoards as $sb) {
             $team = $sb->team;
 
-            $weightedScore = ($sb->points * FootballConstants::PREDICTION_WEIGHT_POINTS) +
-                             ($team->power * FootballConstants::PREDICTION_WEIGHT_POWER);
+            $weightedScore = ($sb->points * FootballConstants::PREDICTION_WEIGHT_POINTS) + $team->power;
 
             $totalShootsForTeam = 0;
             if ($sb->played > 0) {
