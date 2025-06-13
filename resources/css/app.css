@@ -1,3 +1,5 @@
+/* Bootstrap import removed - loaded via CDN in the Blade template */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

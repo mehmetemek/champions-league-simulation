@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Team;
 use App\Models\Fixture;
+use App\Models\ScoreBoard;
 use App\Services\DataCleanupService;
 
 class FixtureGeneratorService
@@ -55,7 +56,13 @@ class FixtureGeneratorService
             array_unshift($teamIds, $lastTeam);
             array_splice($teamIds, 1, 0, [$firstTeam]);
         }
-
+        
+        ScoreBoard::insert($teams->map(function ($team) {
+            return [
+                'team_id' => $team->id
+            ];
+        })->toArray());
+        
         Fixture::insert($fixtures);
 
         return true;
