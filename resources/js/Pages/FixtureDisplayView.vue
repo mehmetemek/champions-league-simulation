@@ -1,5 +1,5 @@
 <template>
-  <div class="fixture-display container">
+  <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-10">
         <h1 class="text-center display-4 mb-5">Generated Fixtures</h1>
@@ -9,8 +9,8 @@
         </div>
         <div class="row">
           <div class="col-md-3 mb-4" v-for="(fixtures, week) in fixturesByWeek" :key="week">
-            <div class="card fixture-card">
-              <div class="card-header card-header-dark">
+            <div class="card shadow-sm">
+              <div class="card-header bg-dark text-white">
                 <strong>Week {{ week }}</strong>
               </div>
               <ul class="list-group list-group-flush">

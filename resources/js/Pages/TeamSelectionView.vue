@@ -1,12 +1,12 @@
 <template>
-  <div class="team-selection container">
+  <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <h1 class="text-center display-4 mb-5">Tournament Teams</h1>
         <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
 
         <div class="card mb-4">
-          <div class="card-header card-header-dark">
+          <div class="card-header bg-dark text-white">
             <strong>Team Name</strong>
           </div>
           <ul class="list-group list-group-flush">

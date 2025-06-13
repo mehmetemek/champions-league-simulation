@@ -1,5 +1,5 @@
 <template>
-  <div class="simulation-view container">
+  <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-10">
         <h1 class="text-center display-4 mb-5">Simulation</h1>
@@ -10,9 +10,9 @@
         <div class="row mt-4">
           <div class="col-md-6">
             <h3 class="mb-3">League Table</h3>
-            <div class="league-table-container">
-              <table class="table table-striped table-bordered table-custom">
-                <thead>
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-dark">
                   <tr>
                     <th scope="col">Team Name</th>
                     <th scope="col">P</th>
@@ -46,20 +46,20 @@
               No match results found for this week.
             </div>
             <div v-else>
-              <div class="card match-result-card mb-2" v-for="match in currentWeekMatches" :key="match.id">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                  <span class="team-name">{{ match.home_team_name }}</span>
-                  <span class="score-display">
+              <div class="card mb-2 border-0 shadow-sm" v-for="match in currentWeekMatches" :key="match.id">
+                <div class="card-body d-flex justify-content-between align-items-center bg-light">
+                  <span class="text-end col-5">{{ match.home_team_name }}</span>
+                  <span class="px-3 py-1 bg-white rounded shadow-sm border">
                     <strong>{{ match.home_score }} - {{ match.away_score }}</strong>
                   </span>
-                  <span class="team-name">{{ match.away_team_name }}</span>
+                  <span class="text-start col-5">{{ match.away_team_name }}</span>
                 </div>
               </div>
             </div>
             <h3 class="mb-3 mt-4">Championship Predictions</h3>
-            <div class="prediction-table-container">
-              <table class="table table-striped table-bordered table-custom">
-                <thead>
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-dark">
                   <tr>
                     <th scope="col">Team Name</th>
                     <th scope="col">%</th>
