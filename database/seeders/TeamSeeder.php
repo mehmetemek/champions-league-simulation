@@ -27,7 +27,7 @@ class TeamSeeder extends Seeder
         ];
 
         foreach ($teamsData as $teamData) {
-            $power = $faker->randomFloat(2, 80, 95);
+            $power = $faker->randomFloat(2, 70, 98);
 
             $team = Team::create([
                 'name' => $teamData['name'],
