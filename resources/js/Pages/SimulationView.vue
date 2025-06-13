@@ -160,7 +160,7 @@ const playAllWeeks = async () => {
     championshipPredictions.value = response.data.championship_predictions;
     await fetchCurrentSimulationState(currentWeek.value);
   } catch (err) {
-      error.value = err?.response?.data?.message || 'Something went wrong while playing all weeks.';
+      error.value = err?.response?.data?.message || 'Error playing all weeks.';
   } finally {
     loading.value = false;
   }

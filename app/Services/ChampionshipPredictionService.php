@@ -153,7 +153,6 @@ class ChampionshipPredictionService
 
                 if ($maxIndex !== -1) {
                     $predictions[$maxIndex]['percentage'] += $diff;
-                    $predictions[$maxIndex]['percentage'] = max(0, min(100, $predictions[$maxIndex]['percentage']));
                 }
             }
         }

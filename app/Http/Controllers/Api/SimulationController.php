@@ -34,7 +34,7 @@ class SimulationController extends Controller
     }
 
 
-    public function playWeek(Request $request, int $week)
+    public function playWeek(int $week)
     {
         $maxWeek = Fixture::max('week') ?? 0;
         if ($week <= 0 || $week > $maxWeek) {
@@ -47,7 +47,7 @@ class SimulationController extends Controller
                                   ->get();
 
         if ($fixturesToPlay->isEmpty()) {
-            return response()->json(['message' => 'No unplayed matches found for week ' . $week . '.'], 200);
+            return response()->json(['message' => 'No unplayed matches found for week ' . $week . '.'], 404);
         }
 
         $playedGames = [];
@@ -75,7 +75,7 @@ class SimulationController extends Controller
         $currentPlayedWeek = Fixture::where('is_played', true)->max('week') ?? 0;
 
         if ($currentPlayedWeek >= $maxWeek) {
-            return response()->json(['message' => 'All matches have already been played.'], 200);
+            return response()->json(['message' => 'All matches have already been played.'], 400);
         }
 
         $allPlayedGames = [];

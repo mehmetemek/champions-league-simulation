@@ -49,7 +49,7 @@ const generateFixtures = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await window.axios.post('/api/fixtures/generate');
+    await window.axios.post('/api/fixtures/generate');
     router.visit('/fixtures');
   } catch (err) {
     error.value = err.response ? err.response.data.message : 'Unable to generate fixtures.';
