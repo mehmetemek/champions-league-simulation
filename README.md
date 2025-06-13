@@ -1,61 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Şampiyonlar Ligi Simülasyonu
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bu proje, 4 futbol takımları arasında gerçekleşen bir ligin simülasyonu yapan web uygulamasıdır. Takımların gücüne, ev sahibi avantajına ve diğer faktörlere dayanarak maç sonuçlarını simüle eder ve şampiyonluk tahminleri sunar.
 
-## About Laravel
+## Özellikler
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Otomatik 4 adet takım oluşturma
+- Otomatik fikstür oluşturma
+- Gerçekçi maç simülasyonları
+- Hafta hafta turnuva simülasyonu
+- Şampiyonluk tahmin sistemi
+- Puan durumu tablosu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Teknolojik Altyapı
 
-## Learning Laravel
+- **Backend:** Laravel 11
+- **Frontend:** Vue.js 3 + Inertia.js
+- **Veritabanı:** MySQL / SQLite (unit testler için)
+- **Containerization:** Docker
+- **CSS Framework:** Bootstrap 5
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Proje Kurulum Adımları
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Bu adımları izleyerek projeyi yerel geliştirme ortamınızda çalıştırabilirsiniz.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Projeyi Klonlama
 
-## Laravel Sponsors
+```bash
+cd champions-league-simulation
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. Docker ile Kurulum
 
-### Premium Partners
+```bash
+# Container'ları oluşturup başlatma
+docker-compose up -d --build
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Composer bağımlılıklarını yükleme
+docker-compose exec app composer install
 
-## Contributing
+# .env dosyasını oluşturma
+docker-compose exec app cp .env.example .env
+docker-compose exec app php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Veritabanını hazırlama
+docker-compose exec app php artisan migrate
+docker-compose exec app php artisan db:seed
+```
 
-## Code of Conduct
+### 3. Frontend Kurulumu
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+# Node.js bağımlılıklarını yükleme
+docker-compose exec node npm install
 
-## Security Vulnerabilities
+# Frontend'i geliştirme modunda başlatma
+docker-compose exec node npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Uygulamaya Erişim
 
-## License
+Kurulum tamamlandıktan sonra, tarayıcınızdan aşağıdaki URL'i açarak uygulamaya erişebilirsiniz:
+```
+http://localhost
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Proje Yapısı
+
+- **app/Models:** Veritabanı modelleri (Team, Fixture, Game, ScoreBoard)
+- **app/Services:** İş mantığı servisleri (FixtureGeneratorService, MatchSimulatorService vb.)
+- **app/Http/Controllers:** Kontrol sınıfları
+- **resources/js/Pages:** Vue.js bileşenleri
+- **tests/:** Birim ve entegrasyon testleri
+
+## Testlerin Çalıştırılması
+
+```bash
+docker-compose exec app php artisan test
+```
