@@ -24,8 +24,6 @@ class MatchSimulatorService
         list($homeScore, $awayScore, $homeShootCount, $awayShootCount) =
             $this->calculateScores($homePowerAdjusted, $awayPowerAdjusted);
 
-        $game = Game::where('fixture_id', $fixture->id)->first();
-        
         $game = Game::create([
                 'fixture_id' => $fixture->id,
                 'home_score' => $homeScore,

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\ScoreBoard;
 use App\Models\Fixture;
 use App\Models\Team;
-use App\Models\Game;
 use App\Constants\FootballConstants;
 
 class ChampionshipPredictionService
@@ -38,7 +37,40 @@ class ChampionshipPredictionService
 
         $leader = $scoreBoards->first();
         $canCatchUp = false;
-
+        
+        $remainingFixtures = Fixture::where('is_played', false)->count();
+        
+        if ($remainingFixtures == 0 && $leader) {
+            $topPoints = $leader->points;
+            $teamsWithSamePoints = $scoreBoards->where('points', $topPoints)->count();
+            
+            if ($teamsWithSamePoints == 1) {
+                foreach ($scoreBoards as $sb) {
+                    $team = $sb->team;
+                    $predictions[] = [
+                        'team_id' => $team->id,
+                        'team_name' => $team->name,
+                        'percentage' => ($team->id === $leader->team_id) ? 100 : 0,
+                    ];
+                }
+                return $predictions;
+            }
+            else if ($teamsWithSamePoints > 1) {
+                $topTeams = $scoreBoards->where('points', $topPoints)->values();
+                $champion = $topTeams->first();
+                
+                foreach ($scoreBoards as $sb) {
+                    $team = $sb->team;
+                    $predictions[] = [
+                        'team_id' => $team->id,
+                        'team_name' => $team->name,
+                        'percentage' => ($team->id === $champion->team_id) ? 100 : 0,
+                    ];
+                }
+                return $predictions;
+            }
+        }
+        
         foreach ($scoreBoards as $sb) {
             if ($sb->team_id === $leader->team_id) {
                 continue;
