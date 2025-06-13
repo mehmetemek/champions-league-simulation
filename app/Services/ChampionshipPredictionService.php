@@ -33,10 +33,6 @@ class ChampionshipPredictionService
                                  ->orderByDesc('goals_for')
                                  ->get();
 
-        if ($scoreBoards->isEmpty()) {
-            return $defaultPredictions;
-        }
-
         $predictions = [];
         $teamWeightedScores = [];
 
@@ -81,33 +77,6 @@ class ChampionshipPredictionService
             $team = $sb->team;
 
             $weightedScore = ($sb->points * FootballConstants::PREDICTION_WEIGHT_POINTS) + $team->power;
-
-            $totalShootsForTeam = 0;
-            if ($sb->played > 0) {
-                $totalShootsForTeam += $team->homeGames()->sum('home_shoot_count');
-                $totalShootsForTeam += $team->awayGames()->sum('away_shoot_count');
-            }
-
-            $goalEfficiencyBonus = 0;
-            if ($totalShootsForTeam > 0) {
-                $goalShootRatio = ($sb->goals_for / $totalShootsForTeam);
-                $goalEfficiencyBonus = max(0, 1 - abs(FootballConstants::OPTIMAL_GOAL_SHOOT_RATIO - $goalShootRatio)) * FootballConstants::PREDICTION_WEIGHT_GOAL_SHOOT_RATIO;
-            }
-            $weightedScore += $goalEfficiencyBonus;
-
-
-            $awayWinPercentage = 0;
-            $awayGamesPlayed = $team->awayGames;
-            $awayPlayedCount = $awayGamesPlayed->count();
-
-            if ($awayPlayedCount > 0) {
-                $awayWinsCount = $awayGamesPlayed->filter(function($game) use ($team) {
-                    return $game->away_score > $game->home_score;
-                })->count();
-                $awayWinPercentage = $awayWinsCount / $awayPlayedCount;
-            }
-            $weightedScore += ($awayWinPercentage * FootballConstants::PREDICTION_WEIGHT_AWAY_PERFORMANCE);
-
 
             $weightedScore = max(0, $weightedScore);
             $teamWeightedScores[$team->id] = $weightedScore;

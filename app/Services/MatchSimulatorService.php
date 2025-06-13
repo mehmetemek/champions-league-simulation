@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Fixture;
 use App\Models\Game;
-use App\Models\ScoreBoard;
+use App\Models\Team;
 use Illuminate\Support\Carbon;
 use App\Constants\FootballConstants;
 
@@ -18,23 +18,56 @@ class MatchSimulatorService
         $homePower = $homeTeam->power;
         $awayPower = $awayTeam->power;
 
-        $homeScoreBoard = ScoreBoard::firstOrCreate(['team_id' => $homeTeam->id]);
-        $awayScoreBoard = ScoreBoard::firstOrCreate(['team_id' => $awayTeam->id]);
-
         list($homePowerAdjusted, $awayPowerAdjusted) =
-            $this->adjustTeamPowers($homePower, $awayPower, $homeTeam->id, $awayTeam->id, $homeScoreBoard, $awayScoreBoard);
-
+            $this->adjustTeamPowers($homePower, $awayPower, $homeTeam->id, $awayTeam->id);
 
         list($homeScore, $awayScore, $homeShootCount, $awayShootCount) =
             $this->calculateScores($homePowerAdjusted, $awayPowerAdjusted);
 
+        $game = Game::where('fixture_id', $fixture->id)->first();
+        
         $game = Game::create([
-            'fixture_id' => $fixture->id,
-            'home_score' => $homeScore,
-            'away_score' => $awayScore,
-            'home_shoot_count' => $homeShootCount,
-            'away_shoot_count' => $awayShootCount,
-        ]);
+                'fixture_id' => $fixture->id,
+                'home_score' => $homeScore,
+                'away_score' => $awayScore,
+                'home_shoot_count' => $homeShootCount,
+                'away_shoot_count' => $awayShootCount,
+            ]);
+
+        $isHomeWinner = $homeScore > $awayScore;
+        $isAwayWinner = $awayScore > $homeScore;
+
+        if ($isHomeWinner) {
+            $homeGoalShootRatio = $homeScore / $homeShootCount;
+            $awayGoalEfficiencyPenalty = $homeGoalEfficiencyBonus = $homeGoalShootRatio * FootballConstants::PREDICTION_WEIGHT_GOAL_SHOOT_RATIO;
+            
+            $homePowerAdjusted += $homeGoalEfficiencyBonus;
+            $awayPowerAdjusted -= $awayGoalEfficiencyPenalty;
+
+            Team::where('id', $homeTeam->id)->update([
+                'power' => $homePowerAdjusted,
+            ]);
+
+            Team::where('id', $awayTeam->id)->update([
+                'power' => $awayPowerAdjusted,
+            ]);
+        }
+        
+        if ($isAwayWinner) {
+            $awayGoalShootRatio = $awayScore / $awayShootCount;
+            $homeGoalEfficiencyPenalty = $awayGoalEfficiencyBonus = $awayGoalShootRatio * FootballConstants::PREDICTION_WEIGHT_GOAL_SHOOT_RATIO;
+            
+            $awayPowerAdjusted += $awayGoalEfficiencyBonus;
+            $homePowerAdjusted -= $homeGoalEfficiencyPenalty;
+
+            Team::where('id', $awayTeam->id)->update([
+                'power' => $awayPowerAdjusted,
+            ]);
+
+            Team::where('id', $homeTeam->id)->update([
+                'power' => $homePowerAdjusted,
+            ]);
+        }
 
         $fixture->is_played = true;
         $fixture->save();
@@ -46,9 +79,7 @@ class MatchSimulatorService
         float $homePower,
         float $awayPower,
         int $homeTeamId,
-        int $awayTeamId,
-        ScoreBoard $homeScoreBoard,
-        ScoreBoard $awayScoreBoard
+        int $awayTeamId
     ): array {
         $homePowerAdjusted = $homePower;
         $awayPowerAdjusted = $awayPower;
@@ -81,25 +112,6 @@ class MatchSimulatorService
                             ($lastAwayGame->fixture->away_team_id === $awayTeamId && $lastAwayGame->away_score > $lastAwayGame->home_score);
             if ($isAwayWinner) {
                 $awayPowerAdjusted *= FootballConstants::MORALE_BOOST_FACTOR;
-            }
-        }
-
-        if ($awayScoreBoard->played > 0) {
-            $awayWinsCount = Game::whereHas('fixture', function ($query) use ($awayTeamId) {
-                                    $query->where('away_team_id', $awayTeamId);
-                                })
-                                ->whereColumn('away_score', '>', 'home_score')
-                                ->count();
-
-            $awayPlayedCount = Game::whereHas('fixture', function ($query) use ($awayTeamId) {
-                                    $query->where('away_team_id', $awayTeamId);
-                                })->count();
-
-            if ($awayPlayedCount > 0) {
-                $awayWinRate = $awayWinsCount / $awayPlayedCount;
-                if ($awayWinRate > FootballConstants::AWAY_WIN_RATE_THRESHOLD) {
-                    $awayPowerAdjusted *= FootballConstants::AWAY_WIN_BONUS_FACTOR;
-                }
             }
         }
 
